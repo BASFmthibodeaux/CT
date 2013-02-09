@@ -1,0 +1,276 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title></title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width">
+
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<style>
+	body {
+	  padding-top: 60px;
+	  padding-bottom: 40px;
+	}
+	</style>
+
+	<!-- INCLUDE STYLES -->
+	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css">
+	<link rel="stylesheet" href="../../css/style.css">
+
+    <script src="../../js/jquery.min.js"></script>
+
+	<link href="../../styles/kendo.common.css" rel="stylesheet" />
+  	<link href="../../styles/kendo.silver.css" rel="stylesheet" />
+
+	<!-- INCLUDE JAVASCRIPT KENDO -->
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/kendo.all.js"></script>
+    <script src="../../js/kendo.sortable.js"></script>
+    <script src="../../js/kendo.draganddrop.js"></script>
+    <script src="../../js/kendo.groupable.js"></script>
+    <script src="../../js/kendo.dropdownlist.js"></script>
+    <script src="../../js/kendo.combobox.js"></script>
+    <script src="../../js/kendo.web.js"></script>
+<!--     <script src="../../js/kendo.groupable.js"></script> -->
+<!--     <script src="../../js/kendo.menu.js"></script> -->
+    <script src="../../js/kendo.grid.js"></script>
+    <script src="../../js/kendo.chart.js"></script>
+
+
+
+	<!-- INCLUDE JAVASCRIPT INTERNOS -->
+	<script src="../../js/model/GlobalVariables.js"></script>
+	<script src="../../js/views/graphAccountEvolution.js"></script>
+	<script src="../../js/views/comboAccounts.js"></script>
+	<script src="../../js/views/comboPeriodos.js"></script>
+	<script src="../../js/views/comboUsers.js"></script>
+	<script src="../../js/util/BrowserDetection.js"></script>
+
+</head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+
+
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Moneytrack</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+
+   <script>
+
+//    		var chart = new graphAccountEvolution();
+	    	var combo = new comboAccounts();
+	    	var comboPeriodos2 = new comboPeriodos();
+	    	var comboPeriodos = new comboPeriodos();
+    		var comboUsers = new comboUsers();
+	    	
+    		
+	    	var chart = new graphAccountEvolution();
+    		var chart2 = new graphAccountEvolution();
+
+    		var hash = "nada";
+			var username = "LOUCIMJ";
+
+    		/** Cuando la pagina se haya creado ---------------------------------------------   **/
+	    	$(document).ready (function () { 
+
+	    		//ConnectionString esta definido en GlobalVariables.js
+	    		chart.connectionString = ConnectionString;
+	    		chart.destinationDiv = "#graph";
+
+	    		chart2.connectionString = ConnectionString;
+	    		chart2.destinationDiv = "#graph2";
+
+	    		combo.connectionString = ConnectionString;
+	    		combo.destinationDiv = "#comboBox"
+
+	    		comboPeriodos.connectionString = ConnectionString;
+	    		comboPeriodos.destinationDiv = "#comboPeriodos"
+
+	    		comboPeriodos2.connectionString = ConnectionString;
+	    		comboPeriodos2.destinationDiv = "#comboPeriodos2"
+	    			    		
+	    		comboUsers.connectionString = ConnectionString;
+	    		comboUsers.destinationDiv = "#comboUsers"
+				comboUsers.username= username;
+
+                setTimeout(function() {
+                    //* inicializar combo de cuentas *//
+
+					comboUsers.createCombo();
+                    chart.createChart();
+                    
+                    combo.createCombo();
+                    comboPeriodos.createCombo();
+                    comboPeriodos2.createCombo();
+
+                    var dropdownlist = $("#comboBox").data("kendoDropDownList");
+					dropdownlist.bind("change",onComboAccountsChangeValue2);
+
+					dropdownlist = $("#comboPeriodos").data("kendoDropDownList");
+					dropdownlist.bind("change",onComboAccountsChangeValue);
+					
+					var dropdownlist2 = $("#comboPeriodos2").data("kendoDropDownList");
+					dropdownlist2.bind("change",onComboAccountsChangeValue2);
+					
+                    
+                }, 400);
+                    		    	
+	    	});
+
+    		
+    		
+    		/** FUNCIONES ---------------------------------------------   **/
+
+
+			function onComboUsersChangeValue(event) {
+				
+				var dropdownlist = $("#comboUsers").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				//dropdownlist.text(dataItem.username);
+				combo.holder = dataItem.username;
+				combo.createCombo();
+			}
+			
+    		
+			function onComboAccountsChangeValue(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				var dropdownlist2 = $("#comboPeriodos").data("kendoDropDownList");
+				var dataItem2 = dropdownlist2.dataItem();
+
+				dropdownlist.text(dataItem.card_type);
+				
+				chart.periodos = dataItem2.value;
+                chart.createChart();
+//				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				
+			}
+
+			function onComboAccountsChangeValue2(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				var dropdownlist2 = $("#comboPeriodos2").data("kendoDropDownList");
+				var dataItem2 = dropdownlist2.dataItem();
+
+				dropdownlist.text(dataItem.card_type);
+				
+				chart2.account = dataItem.acc_id;
+				chart2.periodos = dataItem2.value;
+                chart2.createChart();
+//				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				
+			}
+			
+			function toggleDetail(){
+				var div = document.getElementById("detailDiv");
+				div.style.display = "block";
+			    
+				div = document.getElementById("generalDiv");
+				div.style.display = "none";
+				
+				onComboAccountsChangeValue2();
+				
+			}
+			
+			function toggleGeneral(){
+				var div = document.getElementById("detailDiv");
+				div.style.display = "none";
+			    
+				div = document.getElementById("generalDiv");
+				div.style.display = "block";
+			}
+	    </script>
+
+
+
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="row">
+	  	<div class="span5">
+	  		<h6>Cómo vienen las cosas?</h6>
+	  		<p>Este es un gráfico para ver cómo vienen los pagos de las tarjetas.</p>
+	  	</div>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span10" id="generalDiv">
+          <h2>Vista general, sumando todo</h2>
+          <p>Esta es una vista de todas las tarjetas juntas, separando en los tickets hechos en un pago y en cuotas.  </p>
+           <p><input id="comboPeriodos" style="width:250px"/></p>
+		  <div id="graph"></div>
+		  <a class="btn btn-large" onclick="toggleDetail()">ver detalle por cada tarjeta</a>
+        </div>
+<!--         <div class="span4"> -->
+<!--           <h2>Cuánto?</h2> -->
+<!--           <p>Ouch.</p> -->
+<!--           <p><input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();"/> en <input id="comboPagos" style="width:70px"/>     pagos.</p> -->
+<!-- 		  <div id="resultadoCuotas" style="color:#999999"></div> -->
+<!--           <p><a class="btn btn-large" onclick="">Cargar</a></p> -->
+<!--         </div> -->
+<!--       </div> -->
+<!-- 	<br><br> -->
+<!-- 	 <div class="row"> -->
+<!-- 	 	<div class="span4"> -->
+<!-- 	 		<h3>Últimos movimientos</h3> -->
+<!-- 	 		<p>grilla</p> -->
+<!-- 	 	</div>  -->
+ 	 </div> 
+      <div class="row">
+        <div class="span10" id="detailDiv" style="display: none">
+          <h2>Qué tarjeta?</h2>
+           <p>Selecciona la tarjeta de crédito para ver su evolución</p>
+           <p><input id="comboUsers" style="width:250px"/></p>
+           <p><input id="comboBox" style="width:250px"/></p>
+           <p><input id="comboPeriodos2" style="width:250px"/></p>
+		   <div id="graph2"></div>
+		  <a class="btn btn-large" onclick="toggleGeneral()">ver todo sumarizado</a>
+       </div>
+      <hr>
+ 	 </div> 
+
+      <footer>
+        <p>&copy; SDev 2012</p>
+      </footer>
+
+
+
+
+    </div> <!-- /container -->
+
+</body>
+</html>

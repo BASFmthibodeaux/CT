@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Money Track</title>
+		<link href="../../styles/kendo.common.css" rel="stylesheet" />
+    	<link href="../../styles/kendo.default.css" rel="stylesheet" />
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/kendo.core.js"></script>
+        <script src="../../js/kendo.list.js"></script>
+        <script src="../../js/kendo.data.js"></script>
+        <script src="../../js/kendo.model.js"></script>
+        <script src="../../js/kendo.data.xml.js"></script>
+        <script src="../../js/kendo.pager.js"></script>
+        <script src="../../js/kendo.sortable.js"></script>
+        <script src="../../js/kendo.draganddrop.js"></script>
+        <script src="../../js/kendo.groupable.js"></script>
+        <script src="../../js/kendo.grid.js"></script>
+        <script src="../../js/kendo.dropdownlist.js"></script>
+        <script src="../../js/kendo.combobox.js"></script>
+        <script src="../../js/kendo.popup.js"></script>
+        <script src="../../js/kendo.chart.js"></script>
+
+		<script src="../../js/model/GlobalVariables.js"></script>
+		<script src="../../js/views/graphAccountEvolution.js"></script>
+		<script src="../../js/views/comboAccounts.js"></script>
+		
+		<script type="text/javascript" src="http://use.typekit.com/pht2fqi.js"></script>
+		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>        
+
+    </head>
+	<body>
+
+	    <script>
+
+    		var chart = new graphAccountEvolution();
+    		var combo = new comboAccounts();
+			
+			
+			function onComboAccountsChangeValue(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+
+				chart.account = dropdownlist.value();
+//				chart.account = event.item.value;
+				chart.createChart();
+				
+			}
+
+
+	    	//Cuando la pagina se haya creado
+	    	$(document).ready (function () { 
+	    		
+	    		
+	    		chart.connectionString = ConnectionString;
+	    		chart.destinationDiv = "#graph";
+	    		
+	    		combo.connectionString = ConnectionString;
+	    		combo.destinationDiv = "#comboBox"
+	    			    		
+                setTimeout(function() {
+                    // Initialize the chart with a delay to make sure
+                    // the initial animation is visible
+                    chart.createChart();
+                    combo.createCombo();
+					
+                    $(document).bind("kendo:skinChange", function(e) {
+                        chart.createChart();
+                        combo.createCombo();
+                    });
+                }, 400);
+                    		    	
+	    	});
+	    	
+	   
+	    </script>
+
+
+
+		<h1>MoneyTrack</h1>
+		<input id="comboBox" style="width:300px"/> 
+		<div id="graphDiv">
+			<div id="graph"/>
+							
+		</div>
+
+	
+		
+		
+
+
+	</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Money Track</title>
+		<link href="../../styles/kendo.common.css" rel="stylesheet" />
+    	<link href="../../styles/kendo.default.css" rel="stylesheet" />
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/kendo.core.js"></script>
+        <script src="../../js/kendo.list.js"></script>
+        <script src="../../js/kendo.data.js"></script>
+        <script src="../../js/kendo.model.js"></script>
+        <script src="../../js/kendo.data.xml.js"></script>
+        <script src="../../js/kendo.pager.js"></script>
+        <script src="../../js/kendo.sortable.js"></script>
+        <script src="../../js/kendo.draganddrop.js"></script>
+        <script src="../../js/kendo.groupable.js"></script>
+        <script src="../../js/kendo.grid.js"></script>
+        <script src="../../js/kendo.dropdownlist.js"></script>
+        <script src="../../js/kendo.combobox.js"></script>
+        <script src="../../js/kendo.popup.js"></script>
+    </head>
+	<body>
+
+	    <script>
+	    	//Cuando la pagina se haya creado
+	    	$(document).ready (function () { 
+		    	
+		    	var ds = new kendo.data.DataSource({ 
+		    			transport: {
+		    				read: {
+		    					url:"http://localhost:8080/php/view/list_accounts.php",
+		    					data: {
+		    						cHash: "nada1"
+		    					}
+		    				},
+		    			},
+	    				schema: {
+	    					type: "xml",
+	    					data: "/accounts/account",
+	    					model: {
+	    						fields: {
+	    							acc_id: "acc_id/text()",
+	    							bank: "bank/text()",
+	    							card_type: "card_type/text()"
+	    						}
+	    					}
+	    				}
+		    		}
+		    	);
+
+	            $("#grid").kendoGrid({
+	                dataSource: ds,
+	                height: 400,
+	                width: 600,
+	                groupable: false,
+	                scrollable: true,
+	                columns: [ {
+	                        title: "Banco",
+	                        field: "bank",
+	                        width: 260
+	                    } , {
+	                        title: "Tipo tarjeta",
+	                        field: "card_type",
+	                        width: 90
+	                    }]
+	            });
+	            
+	            $("#comboBox").kendoDropDownList({
+	            	dataSource: ds,
+			        dataTextField: "bank",
+        			dataValueField: "acc_id",
+        			suggest: true,
+        			template: '<div width="300">${ data.bank } / <b>${ data.card_type }</b></div>' ,
+	            });
+	    	});
+	    	
+	   
+	    </script>
+
+
+
+
+		<input id="comboBox" style="width:300px"/> 
+
+	
+		<div id="accountsDiv">
+			<div id="grid"/>
+							
+		</div>
+		
+		<div>
+			<in
+			<php>
+				conn
+			</php>
+		
+		</div>
+
+
+	</body>
+</html>
