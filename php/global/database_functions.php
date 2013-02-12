@@ -8,7 +8,6 @@
 function execute_sql ($query) {
     /* Performing SQL query */
     $func_result = mysql_query($query) or die("EXECUTE_SQL:Query failed '".$query."'" . "<br>" .mysql_error());
-
     if ($row = mysql_fetch_array($func_result, MYSQL_NUM)) {
     	$return_code=$row[0];
     } else {

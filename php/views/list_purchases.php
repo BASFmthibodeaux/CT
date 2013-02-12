@@ -32,6 +32,7 @@ due_period		fecha de pago
 
 */
 require_once '../global/global_variables.php';
+require_once '../global/database_functions.php';
 require_once $functions_path . '/connect.php';
 
 	header('Content-type: text/xml');
@@ -57,15 +58,23 @@ require_once $functions_path . '/connect.php';
 		if ($rvar_credit_card !="") {
 			$where = $where . " and pur_cc_id= ".$rvar_credit_card;
 		}
-		if ($rvar_due_period !="") {
-			$where .= " and pur_id in (select fp_pur_id from future_payments where fp_due_period = '".$rvar_due_period."' )";
-		}
 		if ($rvar_period !="") {
 			$where .= " and  substr(pur_date,1,7) = '".$rvar_period."'";
 		}
 		if ($rvar_username != "") {
 			$where = $where . " and pur_purchased_by= '".$rvar_purchased_by."'";
 		}
+		if ($rvar_due_period !="") {
+			
+			if ($rvar_due_period == "LAST_MONTH") {
+				$period = execute_sql ("select max(substr(pur_date,1,7)) from purchases,credit_cards, accounts ".$where);
+			} else {
+				$period = $rvar_due_period;
+			}
+			$where .= " and pur_id in (select fp_pur_id from future_payments where fp_due_period = '".$period."' )";
+		}
+
+
 		$and_operator = "";
 		if ($rvar_order_by == "") {
 			$order_by = " order by pur_date desc";
@@ -78,7 +87,7 @@ require_once $functions_path . '/connect.php';
 		}
 		$query .= $where;
 		$query .= $order_by;
-		$result = mysql_query($query) or die("list_cards.php: Query failed (" . $query .") ". mysql_error());
+		$result = mysql_query($query) or die("list_purchases.php: Query failed (" . $query .") ". mysql_error());
 		$item_index = 0;
 
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {  
@@ -97,6 +106,11 @@ require_once $functions_path . '/connect.php';
 				print('<payment_value>'.round($row["pur_value"]/$row["pur_payments"],2).'</payment_value>'.$NL);
 			} else {
 				print('<payment_value>'.$row["pur_value"].'</payment_value>'.$NL);
+			}
+			if ($rvar_due_period != "") {
+				$remaining = execute_sql ("select count(*) from future_payments where fp_pur_id = ".$row["pur_id"].
+											" and fp_due_period >'".$period."'");
+				print('<remaining_payments>'.$remaining.'</remaining_payments>'.$NL);
 			}
 			print('<timestamp>'.$row["pur_timestamp"].'</timestamp>'.$NL);
 
