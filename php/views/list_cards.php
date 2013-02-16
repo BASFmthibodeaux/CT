@@ -18,6 +18,7 @@
  *  
 */
 require_once '../global/global_variables.php';
+require_once '../global/database_functions.php';
 require_once $functions_path . '/connect.php';
 
 	header('Content-type: text/xml');
@@ -41,7 +42,11 @@ require_once $functions_path . '/connect.php';
 		$query="select * from credit_cards,banks,accounts ";
 		$where = "where bank_id = acc_bank_id and cc_acc_id = acc_id ";
 		if ($rvar_username !="") {
-			$where = $where . " and cc_holder = '".$rvar_username. "' ";
+
+			$usu_id = execute_sql ("select usu_id from users where usu_username = '".$rvar_username."'");
+			$where .= " and bank_usu_id = ".$usu_id;
+
+//			$where = $where . " and cc_holder = '".$rvar_username. "' ";
 		}
 		$and_operator = "";
 		$order_by = " order by bank_description,cc_holder,acc_card_type";
