@@ -38,7 +38,7 @@ require_once $functions_path . '/connect.php';
     import_request_variables("gP","rvar_");
 
 
-	$NL = chr(13).chr(10);
+	$NL = chr(13);
 	$link=connect_database($main_database);
 	
 	print '<?xml version="1.0" encoding="iso-8859-1"?>'. $NL;
