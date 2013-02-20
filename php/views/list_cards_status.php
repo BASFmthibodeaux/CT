@@ -48,10 +48,10 @@ require_once $functions_path . '/connect.php';
 		
 		//TODO: revisar HASH primero!
 				
-		$query = "select acc_card_type,cc_number, cc_holder, sum(fp_value) value from credit_cards,accounts, future_payments"
+		$query = "select cc_id,acc_card_type,cc_number, cc_holder, sum(fp_value) value from credit_cards,accounts, future_payments"
                         ." where acc_id= cc_acc_id and fp_cc_id = cc_id and acc_bank_id = ".$rvar_bank_id
                         ." and fp_due_period = '".$rvar_due_period."'"
-                        ." group by acc_card_type,cc_number,cc_holder";
+                        ." group by cc_id,acc_card_type,cc_number,cc_holder";
 						
 		$result = mysql_query($query) or die("list_cards_status.php: Query failed (" . $query .") ". mysql_error());
 		$item_index = 0;
@@ -60,6 +60,7 @@ require_once $functions_path . '/connect.php';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {  
 
 			print('<credit_card>'.$NL);
+			print('<cc_id>'.$row["cc_id"].'</cc_id>'.$NL);
 			print('<card_type>'.$row["acc_card_type"].'</card_type>'.$NL);
 			print('<cc_number>'.$row["cc_number"].'</cc_number>'.$NL);
 			print('<cc_holder>'.$row["cc_holder"].'</cc_holder>'.$NL);
