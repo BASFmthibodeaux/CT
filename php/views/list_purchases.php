@@ -77,7 +77,7 @@ require_once $functions_path . '/connect.php';
 
 		$and_operator = "";
 		if ($rvar_order_by == "") {
-			$order_by = " order by pur_date desc";
+			$order_by = " order by pur_date";
 		} 
 		if ($rvar_order_by == "TIMESTAMP") {
 			$order_by = " order by pur_timestamp desc";
