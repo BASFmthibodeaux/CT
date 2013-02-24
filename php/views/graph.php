@@ -58,7 +58,6 @@ require_once $functions_path . '/connect.php';
 		
 		if ($rvar_type == "PAYMENTS" || $rvar_type == "") {
 
-			
 			// Buscar en funcion de los pagos
 			$query="select fp_due_period, sum(if (pur_payments=null or pur_payments = 1 ,fp_value,0)) one_payment, sum(if (pur_payments > 1 ,fp_value,0)) more_payments from future_payments, purchases, credit_cards, accounts";
 			$where = " where fp_pur_id = pur_id and pur_cc_id = cc_id "
@@ -70,7 +69,7 @@ require_once $functions_path . '/connect.php';
 				$where = $where . " and cc_acc_id= ".$rvar_account;
 			}
 			if ($rvar_bank_id != "") {
-			     $where .= " and acc_bank_id = ".$rvar_bank_id; 
+			     $where .= " and fp_cc_id in (select cc_id from accounts,credit_cards where acc_id=cc_acc_id and acc_bank_id = ".$rvar_bank_id." )";
 			}
 			//determinar el periodo 
 			
