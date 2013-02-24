@@ -69,6 +69,9 @@ require_once $functions_path . '/connect.php';
 			if ($rvar_account !="") {
 				$where = $where . " and cc_acc_id= ".$rvar_account;
 			}
+			if ($rvar_bank_id != "") {
+			     $where .= " and acc_bank_id = ".$rvar_bank_id; 
+			}
 			//determinar el periodo 
 			
 			$order_by = " group by fp_due_period order by fp_due_period";
