@@ -61,7 +61,7 @@ require_once $functions_path . '/connect.php';
 			// Buscar en funcion de los pagos
 			$query="select fp_due_period, sum(if (pur_payments=null or pur_payments = 1 ,fp_value,0)) one_payment, sum(if (pur_payments > 1 ,fp_value,0)) more_payments from future_payments, purchases, credit_cards, accounts";
 			$where = " where fp_pur_id = pur_id and pur_cc_id = cc_id "
-			          ." and cc_acc_id = cc_id and acc_bank_id in (select bank_id from banks where bank_usu_id = ".$usu_id.") ";
+			          ." and cc_acc_id = acc_id and acc_bank_id in (select bank_id from banks where bank_usu_id = ".$usu_id.") ";
 			if ($rvar_credit_card !="") {
 				$where = $where . " and pur_cc_id= ".$rvar_credit_card;
 			}
@@ -104,10 +104,11 @@ require_once $functions_path . '/connect.php';
 	
 			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 				print('<period>'.$NL);
-	
+				print('<period>'.$row["fp_due_period"].'</period>'.$NL);
 				print('<month>'.date("M y",strtotime($row["fp_due_period"]."-01 00:00:00")).'</month>'.$NL);
 				print('<one_payment>'.round($row["one_payment"]).'</one_payment>'.$NL);
 				print('<more_payments>'.round($row["more_payments"]).'</more_payments>'.$NL);
+				print('<total>'.round($row["more_payments"]+$row["one_payment"]).'</total>'.$NL);
 
                 if (round($row["one_payment"]) > $max_value ) {
                     $max_value = round($row["one_payment"]);

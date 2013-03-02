@@ -62,7 +62,7 @@ require_once $functions_path . '/connect.php';
 			$where .= " and  substr(pur_date,1,7) = '".$rvar_period."'";
 		}
 		if ($rvar_username != "") {
-			$where = $where . " and pur_purchased_by= '".$rvar_purchased_by."'";
+			$where = $where . " and pur_purchased_by= '".$rvar_username."'";
 		}
 		if ($rvar_due_period !="") {
 			
