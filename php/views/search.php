@@ -52,7 +52,8 @@ require_once $functions_path . '/connect.php';
 				
 		$query = "select * from purchases,credit_cards,accounts,banks "
 		              ." where pur_cc_id = cc_id and cc_acc_id = acc_id and acc_bank_id = bank_id"
-		              ." and upper(pur_description) like upper('%".$rvar_search."%') "
+		              ." and (upper(pur_description) like upper('%".$rvar_search."%') "
+		              ." or pur_date like upper('%".$rvar_search."%')) "
 		              ." and pur_cc_id in (select cc_id from credit_cards, accounts where acc_id = cc_id "
 		              ." and acc_bank_id in (select bank_id from banks where bank_usu_id = ".$usu_id."))"; 
 		              /// hay que cambiar para que pueda ver los items a los que estoy autorizado
