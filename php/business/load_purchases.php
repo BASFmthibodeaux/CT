@@ -39,12 +39,11 @@ require_once $functions_path . '/database_functions.php';
 	bypass_check    sacar la funcion de control de duplicacion 
 	
 */
-
 	header('Content-type: text/xml');
 	header('Pragma: public');
 	header('Cache-control: private');
 	header('Expires: -1');
-
+	
     import_request_variables("gP","rvar_");
 
 
