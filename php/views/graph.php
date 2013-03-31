@@ -32,10 +32,10 @@
 */
 
 
-
 require_once '../global/global_variables.php';
 require_once '../global/database_functions.php';
 require_once $functions_path . '/connect.php';
+
 
 	header('Content-type: text/xml');
 	header('Pragma: public');
@@ -101,6 +101,8 @@ require_once $functions_path . '/connect.php';
 			$item_index = 0;
 			
 			$max_value = 0;
+			$max_value_total = 0;
+			$min_value = 0;
 	
 			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 				print('<period>'.$NL);
@@ -110,6 +112,7 @@ require_once $functions_path . '/connect.php';
 				print('<more_payments>'.round($row["more_payments"]).'</more_payments>'.$NL);
 				print('<total>'.round($row["more_payments"]+$row["one_payment"]).'</total>'.$NL);
 
+
                 if (round($row["one_payment"]) > $max_value ) {
                     $max_value = round($row["one_payment"]);
                 }
@@ -117,11 +120,29 @@ require_once $functions_path . '/connect.php';
                     $max_value = round($row["more_payments"]);
                 }
 
+                if ($min_value == 0){
+                    $min_value = $max_value;
+                }
+
+
+                if (round($row["one_payment"])!=0 and round($row["one_payment"]) < $min_value ) {
+                    $min_value = round($row["one_payment"]);
+                }
+                if (round($row["more_payments"])!=0 and round($row["more_payments"]) < $min_value ) {
+                    $min_value = round($row["more_payments"]);
+                }
+
+                if (round($row["more_payments"]+$row["one_payment"]) > $max_value_total) {
+                    $max_value_total =round($row["more_payments"]+$row["one_payment"]);
+                }
+
 				print('</period>'.$NL);
 				$item_index ++;
 		    } 
 		    
-		    print ('<max_value>'.round($max_value*1.1).'</max_value>');
+		    print ('<max_value>'.ceilpow10(round($max_value*1.1)).'</max_value>');
+		    print ('<max_value_total>'.ceilpow10(round($max_value_total*1.1)).'</max_value_total>');
+		    print ('<min_value>'.ceilpow10(round($min_value*0.9)).'</min_value>');
 			print('<query><![CDATA['.$query.']]></query>'.$NL);
 			print('<where_clause><![CDATA['.$where.']]></where_clause>'.$NL);
 		}

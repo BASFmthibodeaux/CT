@@ -5,6 +5,12 @@
  * -----------------------------------------------------
 */
 
+function ceilpow10 ($val) {
+   if ($val % 100 == 0) return $val;
+   return $val + (100 - ($val % 100));
+}
+
+
 function execute_sql ($query) {
     /* Performing SQL query */
     $func_result = mysql_query($query) or die("EXECUTE_SQL:Query failed '".$query."'" . "<br>" .mysql_error());
